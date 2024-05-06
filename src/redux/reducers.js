@@ -1,5 +1,11 @@
-import { combineReducers } from 'redux';
+import { createReducer } from '@reduxjs/toolkit';
 import { statusFilters } from './constants';
+import {
+  addTask,
+  deleteTask,
+  toggleCompleted,
+  setStatusFilter,
+} from './actions';
 
 const tasksInitialState = [
   { id: 0, text: 'Learn HTML and CSS', completed: true },
@@ -13,15 +19,15 @@ const filtersInitialState = {
   status: statusFilters.all,
 };
 
-const tasksReducer = (state = tasksInitialState, action) => {
-  switch (action.type) {
-    case 'tasks/addTask':
+export const tasksReducer = createReducer(tasksInitialState, builder => {
+  builder
+    .addCase(addTask, (state, action) => {
       return [...state, action.payload];
-
-    case 'tasks/deleteTask':
+    })
+    .addCase(deleteTask, (state, action) => {
       return state.filter(task => task.id !== action.payload);
-
-    case 'tasks/toggleCompleted':
+    })
+    .addCase(toggleCompleted, (state, action) => {
       return state.map(task => {
         if (task.id !== action.payload) return task;
         else
@@ -30,23 +36,27 @@ const tasksReducer = (state = tasksInitialState, action) => {
             completed: !task.completed,
           };
       });
+    });
+});
 
-    default:
-      return state;
-  }
-};
+// export const filtersReducer = createReducer(filtersInitialState, builder => {
+//   builder.addCase(setStatusFilter, (state, action) => {
+//     return state.map(task => {
+//       if (task.id !== action.payload) return task;
+//       else
+//         return {
+//           ...task,
+//           completed: !task.completed,
+//         };
+//     });
+//   });
+// });
 
-const filtersReducer = (state = filtersInitialState, action) => {
-  switch (action.type) {
-    case 'filters/setStatusFilter':
-      return { ...state.filters, status: action.payload };
-
-    default:
-      return state;
-  }
-};
-
-export const rootReducer = combineReducers({
-  tasks: tasksReducer,
-  filters: filtersReducer,
+export const filtersReducer = createReducer(filtersInitialState, builder => {
+  builder.addCase(setStatusFilter, (state, action) => {
+    return {
+      ...state,
+      status: action.payload,
+    };
+  });
 });
