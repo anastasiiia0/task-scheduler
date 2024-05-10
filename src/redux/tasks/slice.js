@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addTask, deleteTask, fetchTasks, toggleCompleted } from './operations';
+import {
+  addTask,
+  deleteTask,
+  fetchTasks,
+  // toggleCompleted,
+} from '../tasks/operations';
 
 const handlePending = state => {
   state.isLoading = true;
@@ -44,18 +49,18 @@ const tasksSlice = createSlice({
         );
         state.items.splice(index, 1);
       })
-      .addCase(deleteTask.rejected, handleRejected)
+      .addCase(deleteTask.rejected, handleRejected);
 
-      .addCase(toggleCompleted.pending, handlePending)
-      .addCase(toggleCompleted.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = null;
-        const index = state.items.findIndex(
-          task => task.id === action.payload.id
-        );
-        state.items.splice(index, 1, action.payload); //3rd argument - new element or an array of elements to be inserted into the array at position index
-      })
-      .addCase(toggleCompleted.rejected, handleRejected);
+    // .addCase(toggleCompleted.pending, handlePending)
+    // .addCase(toggleCompleted.fulfilled, (state, action) => {
+    //   state.isLoading = false;
+    //   state.error = null;
+    //   const index = state.items.findIndex(
+    //     task => task.id === action.payload.id
+    //   );
+    //   state.items.splice(index, 1, action.payload); //3rd argument - new element or an array of elements to be inserted into the array at position index
+    // })
+    // .addCase(toggleCompleted.rejected, handleRejected);
   },
 });
 
